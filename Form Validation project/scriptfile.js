@@ -12,10 +12,9 @@ $(document).ready(function () {
     var phonePattern = /^[0-9]+$/;
     var emailPattern = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
 
-
+// console.log("loaded");
     //Here we disable the submit button
     $(':input[type="submit"]').prop('disabled', true);
-    console.log("loaded");
 
 
 
@@ -40,12 +39,12 @@ $(document).ready(function () {
                 }
                 break;
             case 'phoneno':
-             
+                i=$('#phoneno').val().length;
                 if (value !== ''&& !phonePattern.test(value) ) {
                     $('#phoneno-error').text('Phone number should only contain numbers.');phoneno = 0;
-                } else if(i<9) {
-                    var x=9-i;
-                    $('#phoneno-error').text(`Required.Enter more ${x}digit`);
+                } else if(i<10) {
+                    var x=10-i;
+                    $('#phoneno-error').text(`Required.Enter more ${x}digit`);phoneno = 0;
                 }
                 else
                 {
@@ -83,20 +82,13 @@ $(document).ready(function () {
        
     });
 
-    $('#phoneno').on('change',function(){
-
-    });
-
-
-
-
     $('#file').on('change', function () {
         var file = this.files[0];
         if (file) {
             var fileType = file.type;
-            var fileSize = file.size;
+            var fileSize = Math.round((file.size/1024)/1024);
             var validTypes = ["image/jpeg", "image/png", "image/jpg"];
-            var maxSize = 3 * 1024 * 1024; // 3MB
+            var maxSize = 3 ; // 3MB
 
 
 
@@ -104,11 +96,11 @@ $(document).ready(function () {
             if (validTypes.indexOf(fileType) === -1) {
                 $('#file-error').text('Invalid file type. Only JPG ,JPEG and PNG allowed.');
             } else if (fileSize > maxSize) {
-                $('#file-error').text('File size exceeds the limit (2MB).');file2 = 0;
+                $('#file-error').text(`File size exceeds the limit (3MB). Input Size is : ${fileSize}Mb`);file2 = 0;
 
             } else {
                 file2 = 1;
-                $('#file-error').text('File Uploaded').css('color','green'); // change color 
+                $('#file-error').text('File Uploaded').css("color", 'green'); // change color 
 
                 
                 
@@ -143,16 +135,16 @@ $(document).ready(function () {
 function onlyNumberKey(evt) {
     
     // Only ASCII character in that range allowed
-    var p = evt.keyCode;
+  var p = evt.keyCode;
   i=$('#phoneno').val().length;
-   if(i!=10)
+   if(i==10)
    {
+    return(false);
    
-    return (p>47&&p<58);
    }
    else{
-   
-    return(false);
+    $('#phoneno-error').text('Phone number should only contain numbers.');
+    return (p>47&&p<58);
    }
    
 }
