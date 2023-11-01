@@ -9,8 +9,8 @@ var i=0;
 $(document).ready(function () {
     // Regular expressions for validation
     var namePattern = /^[A-Za-z\s]+$/;
-    var phonePattern = /^[0-9]+$/;
-    var emailPattern = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+    var phonePattern = /^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[789]\d{9}$/;
+    var emailPattern = /^[A-Za-z0-9._-]+@[A-Za-z0-9.]+\.[A-Za-z]{2,}$/;
 
 // console.log("loaded");
     //Here we disable the submit button
@@ -68,14 +68,16 @@ $(document).ready(function () {
 
 
 
-    $('#fname,#lname, #email, #phoneno').on('input', function () {
-        
-        if (fname && lname && email && phoneno && file2) {
+    $('#fname,#lname, #email, #phoneno,#submitc').on('input', function () {
+        // console.log("this is captcha flag"); console.log(flag_captcha);
+        if (fname && lname && email && phoneno && file2&&flag_captcha) {
          
             $(':input[type="submit"]').prop('disabled', false);
+            $(':input[type="submit"]').css('background-color','#ADD8E6')  ;
         }
         else{
             $(':input[type="submit"]').prop('disabled', true);
+            $(':input[type="submit"]').css('background-color','grey')  ;
         }
        
 
@@ -161,6 +163,83 @@ function onlyAlpha(a){
     console.log(t);
     return((t>64&&t<91)||(t>96&&t<123));
 }
+
+
+
+// captcha js  code ----------start------------------
+
+
+
+let captcha;var uniquechar = "";
+function generate() {
+
+	// Clear old input
+	$("#submitc").text("");
+
+	// Access the element to store
+	// the generated captcha
+	captcha = $("#image");
+	uniquechar = "";
+
+	const randomchar =
+		"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+	// Generate captcha for length of
+	// 5 with random character
+	for (let i = 1; i < 5; i++) {
+		uniquechar += randomchar.charAt(Math.random() * randomchar.length)
+	}
+
+	// Store generated input
+	$("#image").text (uniquechar);
+    console.log(uniquechar);
+}
+
+function printmsg() {
+	const usr_input = $("#submitc").val();
+console.log(usr_input);
+	// Check whether the input is equal
+	// to generated captcha or not
+	if (usr_input == uniquechar) {
+		let s = $("#key").text("Matched");
+        flag_captcha=1;
+//final check 
+
+if (fname && lname && email && phoneno && file2&&flag_captcha) {
+         
+    $(':input[type="submit"]').prop('disabled', false);
+    $(':input[type="submit"]').css('background-color','#ADD8E6')  ;
+}
+else{
+    $(':input[type="submit"]').prop('disabled', true);
+    $(':input[type="submit"]').css('background-color','grey')  ;
+}
+
+
+	}
+	else {
+		let s = $("#key").text("RE-Enter corret captcha");
+        flag_captcha=0;
+        //final check
+
+        if (fname && lname && email && phoneno && file2&&flag_captcha) {
+         
+            $(':input[type="submit"]').prop('disabled', false);
+            $(':input[type="submit"]').css('background-color','#ADD8E6')  ;
+        }
+        else{
+            $(':input[type="submit"]').prop('disabled', true);
+            $(':input[type="submit"]').css('background-color','grey')  ;
+        }
+	
+	}
+}
+
+
+
+
+
+
 
 
 
